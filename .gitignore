@@ -1,0 +1,11 @@
+# 這個倉庫只放兩個交付資料夾；其他（原始檔、錄音、工具、.env 金鑰）一律不進倉庫
+/*
+!/.gitignore
+!/.nojekyll
+!/dino-zhuyin/
+!/dino-pinyin/
+# 交付資料夾裡的 README 含暫時的登入帳密，不放上公開倉庫
+/dino-zhuyin/README.md
+/dino-pinyin/README.md
+.env
+*.env
