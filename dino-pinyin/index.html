@@ -1715,10 +1715,10 @@ GM.forEach(function(g,i){var c=document.createElement("button");c.className="vC"
 /* --- 共用：麥克風 --- */
 var stream=null,tok=0,timers=[],rec=null,ac=null,AC=window.AudioContext||window.webkitAudioContext,SR=window.SpeechRecognition||window.webkitSpeechRecognition,au=new Audio(),sr=null;
 function later(f,ms){var t=setTimeout(f,ms);timers.push(t);return t}
-function stopAll(){tok++;timers.forEach(clearTimeout);timers=[];try{if(rec&&rec.state!=="inactive")rec.stop()}catch(e){}rec=null;try{au.pause()}catch(e){}try{sr&&sr.abort()}catch(e){}sr=null;
+function stopAll(){tok++;try{if(navigator.audioSession&&navigator.audioSession.type!=="playback")navigator.audioSession.type="playback"}catch(e){}timers.forEach(clearTimeout);timers=[];try{if(rec&&rec.state!=="inactive")rec.stop()}catch(e){}rec=null;try{au.pause()}catch(e){}try{sr&&sr.abort()}catch(e){}sr=null;
   try{ac&&ac.close()}catch(e){}ac=null;if(stream){try{stream.getTracks().forEach(function(t){t.stop()})}catch(e){}stream=null}}
 var _view=view;view=function(id){stopAll();_view(id);if(id==="vox")$("vNo").innerHTML=(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)?"":zh("這裡不能用麥克風，請用瀏覽器直接打開")};
-function mic(ok,fail){if(stream&&stream.active){ok(stream);return}if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){fail();return}
+function mic(ok,fail){if(stream&&stream.active){ok(stream);return}try{if(navigator.audioSession)navigator.audioSession.type="play-and-record"}catch(e){}if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)){fail();return}
   var my=tok;navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){if(my!==tok){s.getTracks().forEach(function(t){t.stop()});return}stream=s;ok(s)}).catch(function(){if(my===tok)fail()})}
 function msg(t){var m=$("vMsg");if(m)m.innerHTML=t||""}
 function noMic(){msg("🎤 "+zh("麥克風打不開，請允許使用麥克風，或用瀏覽器直接打開"))}
